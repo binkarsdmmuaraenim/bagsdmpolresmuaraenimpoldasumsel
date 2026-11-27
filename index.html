@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bagian Sumber Daya Manusia (Bag SDM) - Polres Muara Enim</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        polri: {
+                            navy: '#0B132B',
+                            dark: '#060A17',
+                            slate: '#1C2541',
+                            gold: '#D4AF37',
+                            goldLight: '#F3D06B',
+                            goldDark: '#AA871E',
+                            maroon: '#7F1D1D'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-polri-gold selection:text-polri-navy">
+
+    <!-- Toast Notification Container (Pengganti alert) -->
+    <div id="toastContainer" class="fixed top-20 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Navigation Bar -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-polri-navy/95 backdrop-blur-md border-b border-polri-gold/30 shadow-lg transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo & Brand (Trigger Admin Tersembunyi: Klik 3x pada Lencana) -->
+                <div class="flex items-center gap-3 select-none">
+                    <button id="secretAdminTrigger" title="Bag SDM Polres Muara Enim" class="relative group flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-polri-gold to-polri-goldDark text-polri-navy shadow-md hover:scale-105 transition-transform focus:outline-none">
+                        <i data-lucide="shield" class="w-7 h-7 stroke-[2.5]"></i>
+                        <span id="adminActiveBadge" class="hidden absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-500 border-2 border-polri-navy rounded-full"></span>
+                    </button>
+                    <div>
+                        <span class="block text-xs font-bold tracking-wider uppercase text-polri-gold">Kepolisian Resor Muara Enim</span>
+                        <h1 class="text-base sm:text-lg font-extrabold text-white tracking-tight leading-tight">BAGIAN SUMBER DAYA MANUSIA</h1>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                    <a href="#beranda" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-200 hover:text-polri-gold hover:bg-white/5 transition-colors">Beranda</a>
+                    <a href="#profil" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-200 hover:text-polri-gold hover:bg-white/5 transition-colors">Profil & Tupoksi</a>
+                    <a href="#struktur" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-200 hover:text-polri-gold hover:bg-white/5 transition-colors">Struktur Organisasi</a>
+                    <a href="#galeri" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-200 hover:text-polri-gold hover:bg-white/5 transition-colors">Galeri Kegiatan</a>
+                    <a href="#aplikasi" class="px-3 py-2 rounded-lg text-sm font-medium text-slate-200 hover:text-polri-gold hover:bg-white/5 transition-colors">Tautan Aplikasi</a>
+                    <button id="navAdminBtn" onclick="openAdminPanel()" class="hidden ml-2 px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-polri-gold text-polri-navy hover:bg-polri-goldLight shadow-md transition-all flex items-center gap-1.5">
+                        <i data-lucide="settings" class="w-4 h-4"></i> Panel Admin
+                    </button>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <div class="flex items-center gap-2 md:hidden">
+                    <button id="mobileAdminBtn" onclick="openAdminPanel()" class="hidden p-2.5 rounded-xl bg-polri-gold text-polri-navy font-bold text-xs shadow">
+                        <i data-lucide="settings" class="w-5 h-5"></i>
+                    </button>
+                    <button id="mobileMenuBtn" class="p-2.5 rounded-xl text-slate-200 hover:text-polri-gold hover:bg-white/10 focus:outline-none">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-polri-dark border-t border-white/10 px-4 pt-2 pb-4 space-y-1">
+            <a href="#beranda" class="mobile-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-200 hover:bg-white/10 hover:text-polri-gold">Beranda</a>
+            <a href="#profil" class="mobile-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-200 hover:bg-white/10 hover:text-polri-gold">Profil & Tupoksi</a>
+            <a href="#struktur" class="mobile-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-200 hover:bg-white/10 hover:text-polri-gold">Struktur Organisasi</a>
+            <a href="#galeri" class="mobile-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-200 hover:bg-white/10 hover:text-polri-gold">Galeri Kegiatan</a>
+            <a href="#aplikasi" class="mobile-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-200 hover:bg-white/10 hover:text-polri-gold">Tautan Aplikasi & Kontak</a>
+        </div>
+    </header>
+
+    <!-- A. BERANDA (HERO SECTION) -->
+    <section id="beranda" class="relative min-h-[92vh] flex items-center justify-center pt-20 overflow-hidden bg-polri-dark">
+        <!-- Background Image -->
+        <img id="heroBgImg" src="https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=1920&q=80" 
+             onerror="this.src='https://placehold.co/1920x1080/0B132B/D4AF37?text=Polres+Muara+Enim'"
+             alt="Latar Belakang Bag SDM Polres Muara Enim" 
+             class="absolute inset-0 w-full h-full object-cover object-center scale-105 transition-transform duration-1000">
+        
+        <!-- Dark Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-b from-polri-dark/90 via-polri-navy/85 to-polri-dark/95"></div>
+        
+        <!-- Decorative Gold Accents -->
+        <div class="absolute top-1/4 -left-20 w-72 h-72 bg-polri-gold/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-1/4 -right-20 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Hero Content -->
+        <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-16">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-polri-gold/15 border border-polri-gold/40 text-polri-gold text-xs sm:text-sm font-semibold tracking-wide uppercase mb-6 shadow-sm">
+                <i data-lucide="award" class="w-4 h-4"></i>
+                <span>Polda Sumatera Selatan • Polres Muara Enim</span>
+            </div>
+            
+            <h2 id="heroMainTitle" class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight mb-6">
+                Bagian Sumber Daya Manusia <br class="hidden sm:inline">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-polri-gold via-polri-goldLight to-polri-gold">Polres Muara Enim</span>
+            </h2>
+            
+            <p id="heroSubtitle" class="max-w-2xl mx-auto text-base sm:text-lg text-slate-300 leading-relaxed mb-10">
+                Mewujudkan pembinaan sumber daya manusia Polri yang profesional, unggul, berintegritas, dan humanis dalam mendukung tugas pokok Kepolisian Resor Muara Enim.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#profil" class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-gradient-to-r from-polri-gold to-polri-goldDark text-polri-navy font-bold text-sm sm:text-base shadow-lg shadow-polri-gold/20 hover:brightness-110 transition-all flex items-center justify-center gap-2">
+                    <span>Profil & Tupoksi</span>
+                    <i data-lucide="arrow-down-right" class="w-5 h-5"></i>
+                </a>
+                <a href="#struktur" class="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white border border-white/20 font-semibold text-sm sm:text-base backdrop-blur-sm transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="users" class="w-5 h-5 text-polri-gold"></i>
+                    <span>Struktur Organisasi</span>
+                </a>
+            </div>
+
+            <!-- Quick Highlights -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-14 pt-8 border-t border-white/10 text-left">
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                    <div class="text-polri-gold font-extrabold text-xl sm:text-2xl">4 Unit</div>
+                    <div class="text-xs sm:text-sm text-slate-300 mt-0.5">Subbagian & Urusan</div>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                    <div class="text-polri-gold font-extrabold text-xl sm:text-2xl">Binkar</div>
+                    <div class="text-xs sm:text-sm text-slate-300 mt-0.5">Pembinaan Karier</div>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                    <div class="text-polri-gold font-extrabold text-xl sm:text-2xl">Watpers</div>
+                    <div class="text-xs sm:text-sm text-slate-300 mt-0.5">Perawatan Personel</div>
+                </div>
+                <div class="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
+                    <div class="text-polri-gold font-extrabold text-xl sm:text-2xl">Dalpers</div>
+                    <div class="text-xs sm:text-sm text-slate-300 mt-0.5">Pengendalian Personel</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- B. PROFIL DAN TUPOKSI -->
+    <section id="profil" class="py-20 bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-14">
+                <span class="text-xs font-bold tracking-widest uppercase text-polri-goldDark bg-amber-50 px-3 py-1 rounded-full border border-amber-200">Tugas Pokok & Fungsi</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-polri-navy mt-3">Profil & Tupoksi Bag SDM</h2>
+                <div class="w-20 h-1.5 bg-polri-gold mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Main About Card -->
+            <div class="bg-gradient-to-br from-polri-navy to-polri-slate rounded-3xl p-6 sm:p-10 text-white shadow-xl mb-12 relative overflow-hidden">
+                <div class="absolute right-0 top-0 opacity-5 pointer-events-none">
+                    <i data-lucide="shield" class="w-64 h-64"></i>
+                </div>
+                <div class="relative z-10 flex flex-col lg:flex-row items-start lg:items-center gap-6">
+                    <div class="w-16 h-16 rounded-2xl bg-polri-gold/20 border border-polri-gold/40 flex items-center justify-center shrink-0 text-polri-gold">
+                        <i data-lucide="book-open-check" class="w-8 h-8"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-bold text-polri-gold mb-3">Tentang Bagian Sumber Daya Manusia (Bag SDM)</h3>
+                        <p id="profilDescText" class="text-slate-200 text-base sm:text-lg leading-relaxed">
+                            Tentang Bag SDM Polres adalah singkatan dari Bagian Sumber Daya Manusia Kepolisian Resor, yaitu unsur pembantu pimpinan di bawah Kapolres yang mengelola pembinaan SDM, kesejahteraan pegawai negeri pada Polri, serta pembinaan dan pelatihan personel. Unit ini dipimpin oleh Kepala Bagian Sumber Daya Manusia (Kabag SDM).
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4 Subbagian & Urusan Cards -->
+            <div class="mb-6">
+                <h3 class="text-lg font-bold text-polri-navy mb-6 flex items-center gap-2">
+                    <i data-lucide="layers" class="w-5 h-5 text-polri-goldDark"></i>
+                    <span>Secara umum, Bag SDM Polres terdiri atas beberapa subbagian dan urusan:</span>
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- 1. Subbagbinkar -->
+                    <div class="group bg-slate-50 hover:bg-white rounded-2xl p-6 border border-slate-200 hover:border-polri-gold shadow-sm hover:shadow-lg transition-all">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-polri-navy text-polri-gold flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                <i data-lucide="trending-up" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold uppercase tracking-wider text-polri-goldDark">Subbagian 01</span>
+                                <h4 class="text-lg font-bold text-polri-navy mt-0.5">Subbagian Pembinaan Karier (Subbagbinkar)</h4>
+                                <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                                    Bertugas menyelenggarakan pembinaan karier personel Polri dan PNS Polri yang meliputi mutasi, kepangkatan, pengangkatan dan pemberhentian dalam jabatan, serta penilaian kinerja personel (SMK/E-Kinerja).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Subbagwatpers -->
+                    <div class="group bg-slate-50 hover:bg-white rounded-2xl p-6 border border-slate-200 hover:border-polri-gold shadow-sm hover:shadow-lg transition-all">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-polri-navy text-polri-gold flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                <i data-lucide="heart-handshake" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold uppercase tracking-wider text-polri-goldDark">Subbagian 02</span>
+                                <h4 class="text-lg font-bold text-polri-navy mt-0.5">Subbagian Perawatan Personel (Subbagwatpers)</h4>
+                                <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                                    Bertugas menyelenggarakan pembinaan kesejahteraan, pembinaan rohani, mental, jasmani, pelayanan administrasi nikah/cerai/rujuk, cuti, tanda kehormatan, hingga pengakhiran dinas/pensiun personel.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Subbagdalpers -->
+                    <div class="group bg-slate-50 hover:bg-white rounded-2xl p-6 border border-slate-200 hover:border-polri-gold shadow-sm hover:shadow-lg transition-all">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-polri-navy text-polri-gold flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                <i data-lucide="user-check" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold uppercase tracking-wider text-polri-goldDark">Subbagian 03</span>
+                                <h4 class="text-lg font-bold text-polri-navy mt-0.5">Subbagian Pengendalian Personel (Subbagdalpers)</h4>
+                                <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                                    Bertugas menyelenggarakan penyediaan dan penerimaan anggota Polri (rim Polri), seleksi pendidikan pengembangan/kejuruan, serta penyelenggaraan pelatihan fungsi teknis kepolisian di lingkungan Polres.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Urmin -->
+                    <div class="group bg-slate-50 hover:bg-white rounded-2xl p-6 border border-slate-200 hover:border-polri-gold shadow-sm hover:shadow-lg transition-all">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 rounded-xl bg-polri-navy text-polri-gold flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                                <i data-lucide="folder-kanban" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <span class="text-xs font-bold uppercase tracking-wider text-polri-goldDark">Urusan 04</span>
+                                <h4 class="text-lg font-bold text-polri-navy mt-0.5">Urusan Administrasi (Urmin)</h4>
+                                <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                                    Bertugas menyelenggarakan ketatausahaan dan urusan dalam Bag SDM, meliputi pengelolaan surat-menyurat, arsip, perencanaan program kerja, serta dukungan administrasi dan logistik internal Bag SDM.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- C. STRUKTUR ORGANISASI -->
+    <section id="struktur" class="py-20 bg-slate-100 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-xs font-bold tracking-widest uppercase text-polri-navy bg-polri-gold/30 px-3 py-1 rounded-full">Bagan Personel</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-polri-navy mt-3">Struktur Organisasi Bag SDM</h2>
+                <p class="text-slate-600 text-sm sm:text-base mt-3">Susunan pejabat pimpinan, kepala subbagian, perwira urusan, dan personel pelaksana pada Bagian Sumber Daya Manusia Polres Muara Enim.</p>
+                <div class="w-20 h-1.5 bg-polri-gold mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Dynamic Org Chart Container -->
+            <div id="orgChartContainer" class="space-y-10">
+                <!-- Rendered via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- D. GALERI KEGIATAN -->
+    <section id="galeri" class="py-20 bg-white border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
+                <div>
+                    <span class="text-xs font-bold tracking-widest uppercase text-polri-goldDark bg-amber-50 px-3 py-1 rounded-full border border-amber-200">Dokumentasi</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-polri-navy mt-3">Galeri Kegiatan</h2>
+                    <div class="w-20 h-1.5 bg-polri-gold mt-3 rounded-full"></div>
+                </div>
+                <p class="text-sm text-slate-600 max-w-md">
+                    Dokumentasi kegiatan pembinaan karier, penerimaan anggota Polri, pembinaan rohani/jasmani, dan pelayanan personel Polres Muara Enim.
+                </p>
+            </div>
+
+            <!-- Dynamic Gallery Grid -->
+            <div id="galleryContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Rendered via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- TAUTAN APLIKASI & MEDIA SOSIAL -->
+    <section id="aplikasi" class="py-20 bg-polri-navy text-white relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <span class="text-xs font-bold tracking-widest uppercase text-polri-gold bg-white/10 px-3 py-1 rounded-full">Portal Digital</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-3">Tautan Link Aplikasi SDM</h2>
+                <p class="text-slate-300 text-sm sm:text-base mt-3">Akses cepat menuju sistem informasi dan aplikasi layanan pembinaan sumber daya manusia Kepolisian Negara Republik Indonesia.</p>
+                <div class="w-20 h-1.5 bg-polri-gold mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Dynamic App Links Grid -->
+            <div id="appLinksContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-16">
+                <!-- Rendered via JS -->
+            </div>
+
+            <!-- Media Sosial Resmi -->
+            <div class="bg-polri-slate/80 border border-white/10 rounded-3xl p-8 text-center">
+                <h3 class="text-xl font-bold text-polri-gold mb-2">Terhubung Bersama Media Sosial Resmi</h3>
+                <p class="text-sm text-slate-300 mb-6">Ikuti informasi terkini seputar penerimaan Polri dan kegiatan Bag SDM Polres Muara Enim</p>
+                
+                <div id="socialLinksContainer" class="flex flex-wrap items-center justify-center gap-4">
+                    <!-- Rendered via JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-polri-dark text-slate-400 border-t border-white/10 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
+            <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-polri-gold"></span>
+                <span>Polres Muara Enim - Polda Sumatera Selatan</span>
+            </div>
+            
+            <!-- Tulisan Dibuat Oleh Paling Bawah + Akses Admin Samar -->
+            <div class="flex items-center gap-2">
+                <p id="footerCreditText" class="font-medium text-slate-300">Dibuat oleh Bag SDM Polres Muara Enim</p>
+                <button onclick="triggerAdminAccess()" title="Akses Pengelola" class="p-1.5 rounded-lg text-slate-600 hover:text-polri-gold transition-colors focus:outline-none">
+                    <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========================================== -->
+    <!-- MODAL LOGIN ADMIN (TERSEMBUNYI)            -->
+    <!-- ========================================== -->
+    <div id="adminLoginModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 animate-fade-in">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-polri-navy text-polri-gold flex items-center justify-center">
+                        <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-polri-navy">Otentikasi Admin</h3>
+                        <p class="text-xs text-slate-500">Bag SDM Polres Muara Enim</p>
+                    </div>
+                </div>
+                <button onclick="closeLoginModal()" class="p-2 rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-700">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Kata Sandi Administrator</label>
+                    <input type="password" id="adminPasswordInput" required placeholder="Masukkan kata sandi..." 
+                           class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-polri-navy focus:ring-2 focus:ring-polri-navy/20 outline-none text-sm">
+                </div>
+                <div class="flex items-center justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeLoginModal()" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100">Batal</button>
+                    <button type="submit" class="px-6 py-2.5 rounded-xl text-sm font-bold bg-polri-navy text-polri-gold hover:bg-polri-slate shadow-md transition-all">Masuk Panel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PANEL KONTROL ADMIN (FULL MODAL/DRAWER)    -->
+    <!-- ========================================== -->
+    <div id="adminPanelModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+        <div class="bg-slate-50 rounded-3xl max-w-5xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+            
+            <!-- Panel Header -->
+            <div class="bg-polri-navy text-white px-6 py-4 flex items-center justify-between border-b border-polri-gold/30 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-polri-gold text-polri-navy flex items-center justify-center font-bold">
+                        <i data-lucide="sliders" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-base sm:text-lg">Panel Pengelola Konten Website</h3>
+                        <p class="text-xs text-polri-gold">Perubahan otomatis tersimpan di penyimpanan browser</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="logoutAdmin()" class="px-3 py-1.5 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-200 text-xs font-semibold flex items-center gap-1.5">
+                        <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Keluar Admin
+                    </button>
+                    <button onclick="closeAdminPanel()" class="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Admin Tabs -->
+            <div class="bg-white border-b border-slate-200 px-4 sm:px-6 flex overflow-x-auto gap-2 shrink-0">
+                <button onclick="switchAdminTab('tab-umum')" id="btn-tab-umum" class="admin-tab-btn px-4 py-3.5 text-xs sm:text-sm font-bold border-b-2 border-polri-navy text-polri-navy whitespace-nowrap">1. Beranda & Profil</button>
+                <button onclick="switchAdminTab('tab-struktur')" id="btn-tab-struktur" class="admin-tab-btn px-4 py-3.5 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-polri-navy whitespace-nowrap">2. Struktur Organisasi</button>
+                <button onclick="switchAdminTab('tab-galeri')" id="btn-tab-galeri" class="admin-tab-btn px-4 py-3.5 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-polri-navy whitespace-nowrap">3. Galeri Kegiatan</button>
+                <button onclick="switchAdminTab('tab-tautan')" id="btn-tab-tautan" class="admin-tab-btn px-4 py-3.5 text-xs sm:text-sm font-semibold border-b-2 border-transparent text-slate-500 hover:text-polri-navy whitespace-nowrap">4. Aplikasi & Medsos</button>
+            </div>
+
+            <!-- Panel Body (Scrollable) -->
+            <div class="p-6 overflow-y-auto flex-1 space-y-6">
+                
+                <!-- TAB 1: BERANDA & PROFIL -->
+                <div id="tab-umum" class="admin-tab-content space-y-5">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 space-y-4">
+                        <h4 class="font-bold text-polri-navy border-b pb-2">Pengaturan Beranda & Profil</h4>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">URL Gambar Latar Belakang Beranda</label>
+                            <input type="url" id="editHeroBg" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                            <p class="text-xs text-slate-400 mt-1">Gunakan tautan gambar langsung (JPG/PNG/WebP).</p>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">Subjudul Beranda</label>
+                            <textarea id="editHeroSub" rows="2" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">Teks Tentang Bag SDM (Profil)</label>
+                            <textarea id="editProfilDesc" rows="4" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">Teks Kredit Footer (Paling Bawah)</label>
+                            <input type="text" id="editFooterCredit" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+                            <button onclick="saveGeneralSettings()" class="px-5 py-2.5 rounded-xl bg-polri-navy text-polri-gold font-bold text-sm hover:bg-polri-slate shadow">Simpan Pengaturan Umum</button>
+                            <button onclick="confirmResetDefault()" class="px-4 py-2.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 font-semibold text-xs border border-red-200">Reset Semua Data ke Default</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: STRUKTUR ORGANISASI -->
+                <div id="tab-struktur" class="admin-tab-content hidden space-y-6">
+                    <!-- Kabag SDM Editor -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 space-y-3">
+                        <h4 class="font-bold text-polri-navy flex items-center gap-2">
+                            <span class="px-2 py-0.5 rounded bg-polri-gold text-polri-navy text-xs">Urutan 1</span>
+                            Pimpinan Tertinggi (Kabag SDM)
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 mb-1">Nama Pejabat</label>
+                                <input type="text" id="editKabagName" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 mb-1">Pangkat / NRP</label>
+                                <input type="text" id="editKabagRank" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-500 mb-1">URL Foto (Opsional)</label>
+                                <input type="text" id="editKabagPhoto" placeholder="https://..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                        </div>
+                        <button onclick="saveKabagData()" class="px-4 py-2 rounded-xl bg-polri-navy text-polri-gold font-bold text-xs">Simpan Kabag SDM</button>
+                    </div>
+
+                    <!-- 4 Units Editor -->
+                    <div id="adminUnitsEditor" class="space-y-4">
+                        <!-- Rendered via JS -->
+                    </div>
+                </div>
+
+                <!-- TAB 3: GALERI KEGIATAN -->
+                <div id="tab-galeri" class="admin-tab-content hidden space-y-6">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 space-y-3">
+                        <h4 class="font-bold text-polri-navy">Tambah Kegiatan Baru</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <input type="text" id="newGalTitle" placeholder="Judul Kegiatan" class="px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                            <input type="text" id="newGalDate" placeholder="Tanggal (misal: 20 November 2026)" class="px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <input type="url" id="newGalImg" placeholder="URL Gambar Kegiatan (https://...)" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                        <textarea id="newGalDesc" rows="2" placeholder="Deskripsi singkat kegiatan..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm"></textarea>
+                        <button onclick="addGalleryItem()" class="px-5 py-2.5 rounded-xl bg-polri-navy text-polri-gold font-bold text-sm">+ Tambah ke Galeri</button>
+                    </div>
+
+                    <div id="adminGalleryList" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Rendered via JS -->
+                    </div>
+                </div>
+
+                <!-- TAB 4: APLIKASI & MEDSOS -->
+                <div id="tab-tautan" class="admin-tab-content hidden space-y-6">
+                    <!-- App Links Manager -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 space-y-4">
+                        <h4 class="font-bold text-polri-navy">Kelola Tautan Link Aplikasi</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <input type="text" id="newAppName" placeholder="Nama Aplikasi (misal: SIPP Polri)" class="px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                            <input type="text" id="newAppDesc" placeholder="Keterangan singkat" class="px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                            <input type="url" id="newAppUrl" placeholder="URL Aplikasi (https://...)" class="px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <button onclick="addAppLink()" class="px-4 py-2 rounded-xl bg-polri-navy text-polri-gold font-bold text-xs">+ Tambah Tautan Aplikasi</button>
+                        
+                        <div id="adminAppLinksList" class="divide-y divide-slate-100 pt-2">
+                            <!-- Rendered via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Social Media Manager -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 space-y-4">
+                        <h4 class="font-bold text-polri-navy">Tautan Media Sosial Resmi</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Instagram URL</label>
+                                <input type="url" id="editSocIg" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Facebook URL</label>
+                                <input type="url" id="editSocFb" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">Gmail / Email (contoh: mailto:sdm@polres.go.id)</label>
+                                <input type="text" id="editSocGmail" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">TikTok URL</label>
+                                <input type="url" id="editSocTiktok" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                        </div>
+                        <button onclick="saveSocialLinks()" class="px-5 py-2.5 rounded-xl bg-polri-navy text-polri-gold font-bold text-sm">Simpan Tautan Media Sosial</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Confirm Modal (Pengganti confirm()) -->
+    <div id="customConfirmModal" class="hidden fixed inset-0 z-[60] bg-black/75 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl">
+            <h4 class="text-lg font-bold text-polri-navy mb-2">Konfirmasi Tindakan</h4>
+            <p id="customConfirmMessage" class="text-sm text-slate-600 mb-6">Apakah Anda yakin?</p>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeCustomConfirm()" class="px-4 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100">Batal</button>
+                <button id="customConfirmYesBtn" class="px-4 py-2 rounded-xl text-sm font-bold bg-red-600 text-white hover:bg-red-700">Ya, Lanjutkan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC & DATA MANAGEMENT         -->
+    <!-- ========================================== -->
+    <script>
+        const STORAGE_KEY = 'bag_sdm_polres_muara_enim_v1';
+        const ADMIN_PASS = 'admin123';
+        let isAdminLoggedIn = false;
+
+        // Default Data sesuai struktur yang diminta user
+        const defaultData = {
+            heroBg: 'https://images.unsplash.com/photo-1577495508048-b635879837f1?auto=format&fit=crop&w=1920&q=80',
+            heroSub: 'Mewujudkan pembinaan sumber daya manusia Polri yang profesional, unggul, berintegritas, dan humanis dalam mendukung tugas pokok Kepolisian Resor Muara Enim.',
+            profilDesc: 'Tentang Bag SDM Polres adalah singkatan dari Bagian Sumber Daya Manusia Kepolisian Resor, yaitu unsur pembantu pimpinan di bawah Kapolres yang mengelola pembinaan SDM, kesejahteraan pegawai negeri pada Polri, serta pembinaan dan pelatihan personel. Unit ini dipimpin oleh Kepala Bagian Sumber Daya Manusia (Kabag SDM).',
+            footerCredit: 'Dibuat oleh Bag SDM Polres Muara Enim',
+            
+            // Struktur Organisasi:
+            // Urutan 1: Kabag SDM
+            kabag: {
+                jabatan: 'KABAG SDM POLRES MUARA ENIM',
+                nama: 'KOMPOL HENDRA WIJAYA, S.H., M.Si.',
+                pangkat: 'KOMISARIS POLISI / NRP 78040912',
+                foto: ''
+            },
+            // Urutan 2: Paurmin (2 personel), Kasubbagbinkar (1 Paur + 3 personel), Kasubbagdalpers (1 Paur + 3 personel), Kasubbagwatpers (1 Paur + 3 personel)
+            units: [
+                {
+                    id: 'urmin',
+                    title: 'Urusan Administrasi (Urmin)',
+                    headRole: 'PAURMIN BAG SDM',
+                    headName: 'IPDA RIZKY PRATAMA, S.H.',
+                    headRank: 'INSPEKTUR POLISI DUA',
+                    headPhoto: '',
+                    members: [
+                        { id: 'm1', role: 'Bamin Urmin 1', name: 'BRIPKA ANDI SAPUTRA', rank: 'BRIGADIR POLISI KEPALA' },
+                        { id: 'm2', role: 'Bamin Urmin 2', name: 'BRIPTU SITI AMINAH, S.Kom.', rank: 'BRIGADIR POLISI SATU' }
+                    ]
+                },
+                {
+                    id: 'binkar',
+                    title: 'Subbagian Pembinaan Karier',
+                    headRole: 'KASUBBAGBINKAR',
+                    headName: 'AKP BUDI SANTOSO, S.I.K.',
+                    headRank: 'AJUN KOMISARIS POLISI',
+                    headPhoto: '',
+                    members: [
+                        { id: 'b1', role: 'Paur Subbagbinkar', name: 'IPDA DEDI KURNIAWAN', rank: 'INSPEKTUR POLISI DUA' },
+                        { id: 'b2', role: 'Bamin Subbagbinkar 1', name: 'AIPDA RAHMAT HIDAYAT', rank: 'AJUN INSPEKTUR POLISI DUA' },
+                        { id: 'b3', role: 'Bamin Subbagbinkar 2', name: 'BRIGPOL RINA MARLINA', rank: 'BRIGADIR POLISI' },
+                        { id: 'b4', role: 'Bamin Subbagbinkar 3', name: 'BRIPDA FAJAR NUGROHO', rank: 'BRIGADIR POLISI DUA' }
+                    ]
+                },
+                {
+                    id: 'dalpers',
+                    title: 'Subbagian Pengendalian Personel',
+                    headRole: 'KASUBBAGDALPERS',
+                    headName: 'AKP AGUS SALIM, S.H.',
+                    headRank: 'AJUN KOMISARIS POLISI',
+                    headPhoto: '',
+                    members: [
+                        { id: 'd1', role: 'Paur Subbagdalpers', name: 'IPDA HENDRI SUSANTO', rank: 'INSPEKTUR POLISI DUA' },
+                        { id: 'd2', role: 'Bamin Subbagdalpers 1', name: 'AIPTU BAMBANG IRAWAN', rank: 'AJUN INSPEKTUR POLISI SATU' },
+                        { id: 'd3', role: 'Bamin Subbagdalpers 2', name: 'BRIPKA DEWI LESTARI', rank: 'BRIGADIR POLISI KEPALA' },
+                        { id: 'd4', role: 'Bamin Subbagdalpers 3', name: 'BRIPTU ILHAM RAMADHAN', rank: 'BRIGADIR POLISI SATU' }
+                    ]
+                },
+                {
+                    id: 'watpers',
+                    title: 'Subbagian Perawatan Personel',
+                    headRole: 'KASUBBAGWATPERS',
+                    headName: 'AKP SRI WAHYUNI, S.Psi.',
+                    headRank: 'AJUN KOMISARIS POLISI',
+                    headPhoto: '',
+                    members: [
+                        { id: 'w1', role: 'Paur Subbagwatpers', name: 'IPDA EKO PRASETYO', rank: 'INSPEKTUR POLISI DUA' },
+                        { id: 'w2', role: 'Bamin Subbagwatpers 1', name: 'AIPDA SURYA DARMA', rank: 'AJUN INSPEKTUR POLISI DUA' },
+                        { id: 'w3', role: 'Bamin Subbagwatpers 2', name: 'BRIGPOL PUTRI HANDAYANI', rank: 'BRIGADIR POLISI' },
+                        { id: 'w4', role: 'Bamin Subbagwatpers 3', name: 'BRIPDA DIMAS ADITYA', rank: 'BRIGADIR POLISI DUA' }
+                    ]
+                }
+            ],
+
+            gallery: [
+                {
+                    id: 'g1',
+                    title: 'Sosialisasi Penerimaan Terpadu Anggota Polri',
+                    date: '14 November 2026',
+                    img: 'https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80',
+                    desc: 'Bag SDM Polres Muara Enim melaksanakan sosialisasi penerimaan Taruna Akpol, Bintara, dan Tamtama Polri secara BETAH (Bersih, Transparan, Akuntabel, dan Humanis).'
+                },
+                {
+                    id: 'g2',
+                    title: 'Pembinaan Rohani dan Mental (Binrohtal) Personel',
+                    date: '07 November 2026',
+                    img: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=800&q=80',
+                    desc: 'Kegiatan rutin Subbagwatpers dalam meningkatkan keimanan, ketakwaan, dan integritas moral seluruh personel Polres Muara Enim.'
+                },
+                {
+                    id: 'g3',
+                    title: 'Ujian Kesamaptaan Jasmani Berkala Semester II',
+                    date: '28 Oktober 2026',
+                    img: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=800&q=80',
+                    desc: 'Pengukuran kebugaran fisik seluruh personel Polri dan ASN Polres Muara Enim guna menjaga kesiapsiagaan operasional di lapangan.'
+                }
+            ],
+
+            appLinks: [
+                { id: 'a1', name: 'SIPP Polri', desc: 'Sistem Informasi Personel Polri Terpadu', url: 'https://sipp.polri.go.id' },
+                { id: 'a2', name: 'Penerimaan Polri', desc: 'Portal Resmi Rekrutmen Anggota Polri', url: 'https://penerimaan.polri.go.id' },
+                { id: 'a3', name: 'E-Kinerja / SMK Online', desc: 'Sistem Manajemen Kinerja Personel Polri', url: 'https://smk.polri.go.id' },
+                { id: 'a4', name: 'New E-Mental & Rohani', desc: 'Layanan Konseling Psikologi & Pembinaan Mental', url: 'https://emental.polri.go.id' }
+            ],
+
+            socials: {
+                instagram: 'https://www.instagram.com',
+                facebook: 'https://www.facebook.com',
+                gmail: 'mailto:bagsdm.polresmuaraenim@polri.go.id',
+                tiktok: 'https://www.tiktok.com'
+            }
+        };
+
+        let appData = loadData();
+
+        function loadData() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    return JSON.parse(saved);
+                }
+            } catch (e) {
+                console.error('Gagal membaca localStorage:', e);
+            }
+            return JSON.parse(JSON.stringify(defaultData));
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+                renderAll();
+            } catch (e) {
+                showToast('Gagal menyimpan perubahan data.', 'error');
+            }
+        }
+
+        // Toast Notification Helper
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            const bgColor = type === 'error' ? 'bg-red-600' : 'bg-polri-navy border border-polri-gold';
+            toast.className = `${bgColor} text-white px-4 py-3 rounded-xl shadow-xl text-sm font-medium flex items-center gap-2.5 transform transition-all duration-300 translate-x-0 pointer-events-auto`;
+            toast.innerHTML = `
+                <i data-lucide="${type === 'error' ? 'alert-circle' : 'check-circle-2'}" class="w-4 h-4 text-polri-gold shrink-0"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
+            lucide.createIcons();
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-x-4');
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
+        }
+
+        // Render Semua Bagian Website
+        function renderAll() {
+            // 1. Hero & Profil & Footer
+            document.getElementById('heroBgImg').src = appData.heroBg || defaultData.heroBg;
+            document.getElementById('heroSubtitle').textContent = appData.heroSub;
+            document.getElementById('profilDescText').textContent = appData.profilDesc;
+            document.getElementById('footerCreditText').textContent = appData.footerCredit;
+
+            // 2. Struktur Organisasi
+            renderOrgChart();
+
+            // 3. Galeri
+            renderGallery();
+
+            // 4. Aplikasi & Medsos
+            renderAppLinks();
+            renderSocialLinks();
+
+            // Re-init icons
+            lucide.createIcons();
+        }
+
+        function renderOrgChart() {
+            const container = document.getElementById('orgChartContainer');
+            const kabag = appData.kabag;
+            const kabagAvatar = kabag.foto 
+                ? `<img src="${kabag.foto}" onerror="this.src='https://placehold.co/150x150/0B132B/D4AF37?text=KABAG'" class="w-20 h-20 rounded-2xl object-cover border-2 border-polri-gold shadow-md mx-auto mb-3">`
+                : `<div class="w-20 h-20 rounded-2xl bg-polri-gold/20 border-2 border-polri-gold text-polri-gold flex items-center justify-center mx-auto mb-3 shadow-inner"><i data-lucide="user-check" class="w-10 h-10"></i></div>`;
+
+            let html = `
+                <!-- URUTAN PERTAMA: KABAG SDM -->
+                <div class="flex flex-col items-center">
+                    <div class="w-full max-w-md bg-gradient-to-b from-polri-navy to-polri-slate text-white rounded-3xl p-6 border-2 border-polri-gold shadow-xl text-center relative">
+                        <span class="inline-block px-3 py-1 rounded-full bg-polri-gold text-polri-navy text-xs font-extrabold tracking-wider uppercase mb-3">
+                            ${kabag.jabatan}
+                        </span>
+                        ${kabagAvatar}
+                        <h3 class="text-lg sm:text-xl font-extrabold text-white tracking-tight">${kabag.nama}</h3>
+                        <p class="text-xs sm:text-sm font-medium text-polri-gold mt-1">${kabag.pangkat}</p>
+                    </div>
+                    <!-- Garis Penghubung Vertikal -->
+                    <div class="w-1 h-8 bg-polri-gold"></div>
+                    <!-- Garis Horizontal Desktop -->
+                    <div class="hidden lg:block w-3/4 h-1 bg-polri-gold rounded-full"></div>
+                </div>
+
+                <!-- URUTAN KEDUA: 4 UNIT SEJAJAR -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-start">
+            `;
+
+            appData.units.forEach(unit => {
+                const headAvatar = unit.headPhoto
+                    ? `<img src="${unit.headPhoto}" onerror="this.src='https://placehold.co/100x100/0B132B/D4AF37?text=PEJABAT'" class="w-14 h-14 rounded-xl object-cover border border-polri-gold shrink-0">`
+                    : `<div class="w-12 h-12 rounded-xl bg-polri-navy text-polri-gold flex items-center justify-center shrink-0"><i data-lucide="shield" class="w-6 h-6"></i></div>`;
+
+                let membersHtml = '';
+                unit.members.forEach((m, idx) => {
+                    const isPaur = m.role.toLowerCase().includes('paur');
+                    membersHtml += `
+                        <div class="p-3 rounded-xl ${isPaur ? 'bg-amber-50/90 border-amber-300' : 'bg-slate-50 border-slate-200'} border flex items-start gap-2.5 transition-all hover:shadow-sm">
+                            <div class="w-7 h-7 rounded-lg ${isPaur ? 'bg-polri-gold text-polri-navy' : 'bg-slate-200 text-slate-700'} flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
+                                ${idx + 1}
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <span class="block text-[11px] font-bold uppercase tracking-wider ${isPaur ? 'text-polri-goldDark' : 'text-slate-500'}">${m.role}</span>
+                                <p class="text-xs sm:text-sm font-bold text-polri-navy truncate" title="${m.name}">${m.name}</p>
+                                <p class="text-[11px] text-slate-500 truncate">${m.rank}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                    <div class="bg-white rounded-3xl border border-slate-200 shadow-md overflow-hidden flex flex-col">
+                        <!-- Unit Header (Pejabat Urutan Kedua) -->
+                        <div class="bg-polri-navy p-4 text-white border-b-2 border-polri-gold">
+                            <span class="block text-[11px] font-bold uppercase tracking-wider text-polri-gold mb-2">${unit.title}</span>
+                            <div class="flex items-center gap-3">
+                                ${headAvatar}
+                                <div class="min-w-0">
+                                    <span class="inline-block px-2 py-0.5 rounded bg-white/10 text-polri-goldLight text-[10px] font-bold uppercase">${unit.headRole}</span>
+                                    <h4 class="text-sm font-bold text-white leading-snug mt-1">${unit.headName}</h4>
+                                    <p class="text-[11px] text-slate-300">${unit.headRank}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Anggota / Personel di bawahnya -->
+                        <div class="p-4 space-y-2.5 bg-white flex-1">
+                            <div class="flex items-center justify-between text-xs font-bold text-slate-400 uppercase tracking-wider pb-1 border-b border-slate-100">
+                                <span>Personel Unit</span>
+                                <span>${unit.members.length} Personel</span>
+                            </div>
+                            ${membersHtml || '<p class="text-xs text-slate-400 italic py-2">Belum ada data personel.</p>'}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        function renderGallery() {
+            const container = document.getElementById('galleryContainer');
+            if (!appData.gallery || appData.gallery.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">Belum ada dokumentasi kegiatan.</div>`;
+                return;
+            }
+
+            container.innerHTML = appData.gallery.map(item => `
+                <article class="group bg-slate-50 rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all flex flex-col">
+                    <div class="relative h-52 overflow-hidden bg-polri-navy">
+                        <img src="${item.img}" 
+                             onerror="this.src='https://placehold.co/800x500/0B132B/D4AF37?text=Kegiatan+Bag+SDM'"
+                             alt="${item.title}" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-polri-navy/90 backdrop-blur-sm text-polri-gold text-xs font-semibold flex items-center gap-1.5">
+                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                            <span>${item.date}</span>
+                        </div>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col">
+                        <h3 class="text-lg font-bold text-polri-navy group-hover:text-polri-goldDark transition-colors line-clamp-2">${item.title}</h3>
+                        <p class="text-sm text-slate-600 mt-2 leading-relaxed line-clamp-3 flex-1">${item.desc}</p>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        function renderAppLinks() {
+            const container = document.getElementById('appLinksContainer');
+            container.innerHTML = appData.appLinks.map(app => `
+                <a href="${app.url}" target="_blank" rel="noopener noreferrer" 
+                   class="group bg-white/5 hover:bg-white/10 border border-white/15 hover:border-polri-gold rounded-2xl p-5 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="w-11 h-11 rounded-xl bg-polri-gold/20 text-polri-gold flex items-center justify-center mb-4 group-hover:bg-polri-gold group-hover:text-polri-navy transition-colors">
+                            <i data-lucide="external-link" class="w-5 h-5"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white group-hover:text-polri-gold transition-colors">${app.name}</h3>
+                        <p class="text-xs text-slate-300 mt-1.5 leading-relaxed">${app.desc}</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs font-semibold text-polri-gold">
+                        <span>Buka Aplikasi</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        function renderSocialLinks() {
+            const s = appData.socials;
+            const container = document.getElementById('socialLinksContainer');
+            const items = [
+                { name: 'Instagram', url: s.instagram, icon: 'instagram', color: 'hover:bg-pink-600 hover:border-pink-500' },
+                { name: 'Facebook', url: s.facebook, icon: 'facebook', color: 'hover:bg-blue-600 hover:border-blue-500' },
+                { name: 'Gmail', url: s.gmail, icon: 'mail', color: 'hover:bg-red-600 hover:border-red-500' },
+                { name: 'TikTok', url: s.tiktok, icon: 'music-2', color: 'hover:bg-slate-900 hover:border-polri-gold' }
+            ];
+
+            container.innerHTML = items.map(item => `
+                <a href="${item.url}" target="_blank" rel="noopener noreferrer" 
+                   class="px-5 py-3 rounded-xl bg-white/10 border border-white/20 text-white font-semibold text-sm flex items-center gap-2.5 transition-all ${item.color} shadow-md">
+                    <i data-lucide="${item.icon}" class="w-5 h-5"></i>
+                    <span>${item.name}</span>
+                </a>
+            `).join('');
+        }
+
+        // ==========================================
+        // ADMIN TERSEMBUNYI & PANEL KONTROL LOGIC
+        // ==========================================
+        let badgeClickCount = 0;
+        let badgeClickTimer = null;
+
+        // Trigger 1: Klik 3 kali pada lencana di pojok kiri atas
+        document.getElementById('secretAdminTrigger').addEventListener('click', () => {
+            if (isAdminLoggedIn) {
+                openAdminPanel();
+                return;
+            }
+            badgeClickCount++;
+            clearTimeout(badgeClickTimer);
+            badgeClickTimer = setTimeout(() => { badgeClickCount = 0; }, 1200);
+            
+            if (badgeClickCount >= 3) {
+                badgeClickCount = 0;
+                triggerAdminAccess();
+            }
+        });
+
+        function triggerAdminAccess() {
+            if (isAdminLoggedIn) {
+                openAdminPanel();
+            } else {
+                document.getElementById('adminPasswordInput').value = '';
+                document.getElementById('adminLoginModal').classList.remove('hidden');
+                setTimeout(() => document.getElementById('adminPasswordInput').focus(), 100);
+            }
+        }
+
+        function closeLoginModal() {
+            document.getElementById('adminLoginModal').classList.add('hidden');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('adminPasswordInput').value;
+            if (pass === ADMIN_PASS) {
+                isAdminLoggedIn = true;
+                closeLoginModal();
+                document.getElementById('navAdminBtn').classList.remove('hidden');
+                document.getElementById('mobileAdminBtn').classList.remove('hidden');
+                document.getElementById('adminActiveBadge').classList.remove('hidden');
+                showToast('Login Admin berhasil! Selamat datang pengelola.');
+                openAdminPanel();
+            } else {
+                showToast('Kata sandi salah! Silakan coba lagi.', 'error');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            document.getElementById('navAdminBtn').classList.add('hidden');
+            document.getElementById('mobileAdminBtn').classList.add('hidden');
+            document.getElementById('adminActiveBadge').classList.add('hidden');
+            closeAdminPanel();
+            showToast('Anda telah keluar dari mode Admin.');
+        }
+
+        function openAdminPanel() {
+            if (!isAdminLoggedIn) return triggerAdminAccess();
+            populateAdminForms();
+            document.getElementById('adminPanelModal').classList.remove('hidden');
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminPanelModal').classList.add('hidden');
+        }
+
+        function switchAdminTab(tabId) {
+            document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+                btn.classList.remove('border-polri-navy', 'text-polri-navy', 'font-bold');
+                btn.classList.add('border-transparent', 'text-slate-500', 'font-semibold');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.remove('border-transparent', 'text-slate-500', 'font-semibold');
+            activeBtn.classList.add('border-polri-navy', 'text-polri-navy', 'font-bold');
+        }
+
+        function populateAdminForms() {
+            // Tab 1: Umum
+            document.getElementById('editHeroBg').value = appData.heroBg;
+            document.getElementById('editHeroSub').value = appData.heroSub;
+            document.getElementById('editProfilDesc').value = appData.profilDesc;
+            document.getElementById('editFooterCredit').value = appData.footerCredit;
+
+            // Tab 2: Kabag & Units
+            document.getElementById('editKabagName').value = appData.kabag.nama;
+            document.getElementById('editKabagRank').value = appData.kabag.pangkat;
+            document.getElementById('editKabagPhoto').value = appData.kabag.foto || '';
+            renderAdminUnitsEditor();
+
+            // Tab 3: Galeri
+            renderAdminGalleryList();
+
+            // Tab 4: Aplikasi & Medsos
+            renderAdminAppLinksList();
+            document.getElementById('editSocIg').value = appData.socials.instagram;
+            document.getElementById('editSocFb').value = appData.socials.facebook;
+            document.getElementById('editSocGmail').value = appData.socials.gmail;
+            document.getElementById('editSocTiktok').value = appData.socials.tiktok;
+            lucide.createIcons();
+        }
+
+        // --- SAVE FUNCTIONS ---
+        function saveGeneralSettings() {
+            appData.heroBg = document.getElementById('editHeroBg').value.trim() || defaultData.heroBg;
+            appData.heroSub = document.getElementById('editHeroSub').value.trim();
+            appData.profilDesc = document.getElementById('editProfilDesc').value.trim();
+            appData.footerCredit = document.getElementById('editFooterCredit').value.trim();
+            saveData();
+            showToast('Pengaturan Beranda & Profil disimpan!');
+        }
+
+        function saveKabagData() {
+            appData.kabag.nama = document.getElementById('editKabagName').value.trim();
+            appData.kabag.pangkat = document.getElementById('editKabagRank').value.trim();
+            appData.kabag.foto = document.getElementById('editKabagPhoto').value.trim();
+            saveData();
+            showToast('Data Kabag SDM diperbarui!');
+        }
+
+        function renderAdminUnitsEditor() {
+            const container = document.getElementById('adminUnitsEditor');
+            container.innerHTML = appData.units.map((unit, uIdx) => `
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 space-y-4">
+                    <div class="flex items-center justify-between border-b pb-2">
+                        <h5 class="font-bold text-polri-navy">${unit.title} (${unit.headRole})</h5>
+                        <span class="text-xs bg-slate-100 px-2.5 py-1 rounded-lg font-semibold text-slate-600">${unit.members.length} Personel</span>
+                    </div>
+                    
+                    <!-- Edit Kepala Unit -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500">Nama ${unit.headRole}</label>
+                            <input type="text" id="unitHeadName-${uIdx}" value="${unit.headName}" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs mt-1">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-slate-500">Pangkat / NRP</label>
+                            <input type="text" id="unitHeadRank-${uIdx}" value="${unit.headRank}" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs mt-1">
+                        </div>
+                        <div class="flex items-end">
+                            <button onclick="saveUnitHead(${uIdx})" class="w-full py-1.5 px-3 rounded-lg bg-polri-navy text-polri-gold font-bold text-xs">Simpan Pejabat</button>
+                        </div>
+                    </div>
+
+                    <!-- Daftar Personel -->
+                    <div class="space-y-2">
+                        <p class="text-xs font-bold text-slate-600">Daftar Personel di bawah ${unit.headRole}:</p>
+                        ${unit.members.map((m, mIdx) => `
+                            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center bg-slate-50 p-2 rounded-xl border border-slate-100">
+                                <input type="text" value="${m.role}" onchange="updateMemberField(${uIdx}, ${mIdx}, 'role', this.value)" placeholder="Jabatan" class="sm:col-span-3 px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs">
+                                <input type="text" value="${m.name}" onchange="updateMemberField(${uIdx}, ${mIdx}, 'name', this.value)" placeholder="Nama Personel" class="sm:col-span-4 px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs font-semibold">
+                                <input type="text" value="${m.rank}" onchange="updateMemberField(${uIdx}, ${mIdx}, 'rank', this.value)" placeholder="Pangkat" class="sm:col-span-4 px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs">
+                                <button onclick="deleteMember(${uIdx}, ${mIdx})" title="Hapus Personel" class="sm:col-span-1 p-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 flex items-center justify-center">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <!-- Form Tambah Personel Baru -->
+                    <div class="pt-2 border-t border-slate-100 flex flex-col sm:flex-row gap-2">
+                        <input type="text" id="addRole-${uIdx}" placeholder="Jabatan (misal: Paur / Bamin)" class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs flex-1">
+                        <input type="text" id="addName-${uIdx}" placeholder="Nama Lengkap & Gelar" class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs flex-1">
+                        <input type="text" id="addRank-${uIdx}" placeholder="Pangkat" class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs flex-1">
+                        <button onclick="addUnitMember(${uIdx})" class="px-4 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shrink-0">+ Tambah</button>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function saveUnitHead(uIdx) {
+            appData.units[uIdx].headName = document.getElementById(`unitHeadName-${uIdx}`).value.trim();
+            appData.units[uIdx].headRank = document.getElementById(`unitHeadRank-${uIdx}`).value.trim();
+            saveData();
+            showToast(`Data ${appData.units[uIdx].headRole} diperbarui!`);
+        }
+
+        function updateMemberField(uIdx, mIdx, field, val) {
+            appData.units[uIdx].members[mIdx][field] = val.trim();
+            saveData();
+            showToast('Data personel diperbarui!');
+        }
+
+        function addUnitMember(uIdx) {
+            const role = document.getElementById(`addRole-${uIdx}`).value.trim() || 'Bamin';
+            const name = document.getElementById(`addName-${uIdx}`).value.trim();
+            const rank = document.getElementById(`addRank-${uIdx}`).value.trim() || 'BRIGADIR POLISI';
+            if (!name) {
+                showToast('Nama personel wajib diisi!', 'error');
+                return;
+            }
+            appData.units[uIdx].members.push({
+                id: 'm_' + Date.now(),
+                role,
+                name,
+                rank
+            });
+            saveData();
+            renderAdminUnitsEditor();
+            showToast('Personel baru berhasil ditambahkan!');
+        }
+
+        function deleteMember(uIdx, mIdx) {
+            appData.units[uIdx].members.splice(mIdx, 1);
+            saveData();
+            renderAdminUnitsEditor();
+            showToast('Personel dihapus dari struktur.');
+        }
+
+        // --- GALLERY ADMIN ---
+        function renderAdminGalleryList() {
+            const list = document.getElementById('adminGalleryList');
+            list.innerHTML = appData.gallery.map((g, idx) => `
+                <div class="bg-white p-3 rounded-xl border border-slate-200 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <img src="${g.img}" class="w-14 h-14 rounded-lg object-cover shrink-0 bg-slate-200">
+                        <div class="min-w-0">
+                            <h5 class="text-xs font-bold text-polri-navy truncate">${g.title}</h5>
+                            <p class="text-[11px] text-slate-400">${g.date}</p>
+                        </div>
+                    </div>
+                    <button onclick="deleteGalleryItem(${idx})" class="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 shrink-0">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function addGalleryItem() {
+            const title = document.getElementById('newGalTitle').value.trim();
+            const date = document.getElementById('newGalDate').value.trim() || 'Hari Ini';
+            const img = document.getElementById('newGalImg').value.trim() || 'https://placehold.co/800x500/0B132B/D4AF37?text=Kegiatan+Bag+SDM';
+            const desc = document.getElementById('newGalDesc').value.trim();
+
+            if (!title) {
+                showToast('Judul kegiatan wajib diisi!', 'error');
+                return;
+            }
+            appData.gallery.unshift({ id: 'g_' + Date.now(), title, date, img, desc });
+            document.getElementById('newGalTitle').value = '';
+            document.getElementById('newGalDate').value = '';
+            document.getElementById('newGalImg').value = '';
+            document.getElementById('newGalDesc').value = '';
+            saveData();
+            renderAdminGalleryList();
+            showToast('Kegiatan berhasil ditambahkan ke galeri!');
+        }
+
+        function deleteGalleryItem(idx) {
+            appData.gallery.splice(idx, 1);
+            saveData();
+            renderAdminGalleryList();
+            showToast('Item galeri dihapus.');
+        }
+
+        // --- APP LINKS & SOCIAL ADMIN ---
+        function renderAdminAppLinksList() {
+            const list = document.getElementById('adminAppLinksList');
+            list.innerHTML = appData.appLinks.map((a, idx) => `
+                <div class="py-2.5 flex items-center justify-between gap-3">
+                    <div class="min-w-0">
+                        <p class="text-xs font-bold text-polri-navy">${a.name}</p>
+                        <p class="text-[11px] text-slate-400 truncate">${a.url}</p>
+                    </div>
+                    <button onclick="deleteAppLink(${idx})" class="p-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function addAppLink() {
+            const name = document.getElementById('newAppName').value.trim();
+            const desc = document.getElementById('newAppDesc').value.trim() || 'Portal Layanan SDM Polri';
+            const url = document.getElementById('newAppUrl').value.trim();
+            if (!name || !url) {
+                showToast('Nama dan URL aplikasi wajib diisi!', 'error');
+                return;
+            }
+            appData.appLinks.push({ id: 'a_' + Date.now(), name, desc, url });
+            document.getElementById('newAppName').value = '';
+            document.getElementById('newAppDesc').value = '';
+            document.getElementById('newAppUrl').value = '';
+            saveData();
+            renderAdminAppLinksList();
+            showToast('Tautan aplikasi ditambahkan!');
+        }
+
+        function deleteAppLink(idx) {
+            appData.appLinks.splice(idx, 1);
+            saveData();
+            renderAdminAppLinksList();
+            showToast('Tautan aplikasi dihapus.');
+        }
+
+        function saveSocialLinks() {
+            appData.socials.instagram = document.getElementById('editSocIg').value.trim();
+            appData.socials.facebook = document.getElementById('editSocFb').value.trim();
+            appData.socials.gmail = document.getElementById('editSocGmail').value.trim();
+            appData.socials.tiktok = document.getElementById('editSocTiktok').value.trim();
+            saveData();
+            showToast('Tautan media sosial diperbarui!');
+        }
+
+        // Custom Confirm Dialog
+        let pendingConfirmCallback = null;
+        function confirmResetDefault() {
+            document.getElementById('customConfirmMessage').textContent = 'Semua perubahan struktur, galeri, dan tautan akan dikembalikan ke data awal. Lanjutkan?';
+            pendingConfirmCallback = () => {
+                appData = JSON.parse(JSON.stringify(defaultData));
+                saveData();
+                populateAdminForms();
+                showToast('Seluruh data dikembalikan ke pengaturan awal.');
+            };
+            document.getElementById('customConfirmModal').classList.remove('hidden');
+        }
+
+        function closeCustomConfirm() {
+            document.getElementById('customConfirmModal').classList.add('hidden');
+            pendingConfirmCallback = null;
+        }
+
+        document.getElementById('customConfirmYesBtn').addEventListener('click', () => {
+            if (pendingConfirmCallback) pendingConfirmCallback();
+            closeCustomConfirm();
+        });
+
+        // Mobile Navigation Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+
+        // Initial Render on Page Load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderAll();
+        });
+    </script>
+</body>
+</html>
